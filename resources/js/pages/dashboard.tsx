@@ -1,35 +1,110 @@
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
+import { Head, Link, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
-import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
+import { type BreadcrumbItem, type SharedData } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Dashboard',
-        href: dashboard().url,
+        href: '/dashboard',
     },
 ];
 
 export default function Dashboard() {
+    const { auth } = usePage<SharedData>().props;
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
+
+            <div className="space-y-6 p-6">
+                <div>
+                    <h1 className="text-2xl font-bold">
+                        Welcome, {auth.user.name}
+                    </h1>
+
+                    <p className="mt-1 text-sm text-muted-foreground">
+                        Laravel 12 Starter Kit Dashboard
+                    </p>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-3">
+                    <div className="rounded-xl border p-6">
+                        <p className="text-sm text-muted-foreground">
+                            Authentication
+                        </p>
+
+                        <h2 className="mt-2 text-xl font-semibold">
+                            Fortify
+                        </h2>
+
+                        <p className="mt-2 text-sm text-muted-foreground">
+                            Secure Laravel authentication is enabled.
+                        </p>
                     </div>
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
+
+                    <div className="rounded-xl border p-6">
+                        <p className="text-sm text-muted-foreground">
+                            Two-Factor Authentication
+                        </p>
+
+                        <h2 className="mt-2 text-xl font-semibold">
+                            Enabled
+                        </h2>
+
+                        <p className="mt-2 text-sm text-muted-foreground">
+                            Manage 2FA from your account settings.
+                        </p>
                     </div>
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
+
+                    <div className="rounded-xl border p-6">
+                        <p className="text-sm text-muted-foreground">
+                            Account Role
+                        </p>
+
+                        <h2 className="mt-2 text-xl font-semibold capitalize">
+                            {auth.user.role}
+                        </h2>
+
+                        <p className="mt-2 text-sm text-muted-foreground">
+                            Current account access level.
+                        </p>
                     </div>
                 </div>
-                <div className="relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border">
-                    <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                </div>
+
+                {auth.user.role === 'admin' && (
+                    <div className="rounded-xl border p-6">
+                        <h2 className="text-lg font-semibold">
+                            Administration
+                        </h2>
+
+                        <p className="mt-1 text-sm text-muted-foreground">
+                            Manage users and monitor authentication security.
+                        </p>
+
+                        <div className="mt-4 flex flex-wrap gap-3">
+                            <Link
+                                href="/admin/security-dashboard"
+                                className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
+                            >
+                                Security Dashboard
+                            </Link>
+
+                            <Link
+                                href="/admin/users"
+                                className="rounded-lg border px-4 py-2 text-sm font-medium"
+                            >
+                                Manage Users
+                            </Link>
+
+                            <Link
+                                href="/admin/security-activities"
+                                className="rounded-lg border px-4 py-2 text-sm font-medium"
+                            >
+                                Activity History
+                            </Link>
+                        </div>
+                    </div>
+                )}
             </div>
         </AppLayout>
     );
